@@ -1,35 +1,34 @@
 // public/cart.js
 
 document.addEventListener('DOMContentLoaded', () => {
-  const DELIVERY_FEE = 8000; // COP, ajusta si quieres
+  const DELIVERY_FEE = 5000; // costo de domicilio (ajústalo si quieres)
 
-  // ---- Elementos DOM ----
+  // ----- Elementos DOM -----
   const backButton = document.getElementById('cart-back-button');
+  const cartEmptyMessage = document.getElementById('cart-empty-message');
   const cartItemsContainer = document.getElementById('cart-items');
-  const emptyMessage = document.getElementById('cart-empty-message');
   const addMoreItemsBtn = document.getElementById('add-more-items-btn');
 
-  const summarySection = document.getElementById('order-summary');
-  const subtotalEl = document.getElementById('summary-subtotal');
-  const deliveryEl = document.getElementById('summary-delivery');
-  const totalEl = document.getElementById('summary-total');
+  const orderSummarySection = document.getElementById('order-summary');
+  const summarySubtotal = document.getElementById('summary-subtotal');
+  const summaryDelivery = document.getElementById('summary-delivery');
+  const summaryTotal = document.getElementById('summary-total');
 
-  const shippingDeliveryInput = document.getElementById('shipping-delivery');
-  const shippingPickupInput = document.getElementById('shipping-pickup');
+  const shippingDelivery = document.getElementById('shipping-delivery');
+  const shippingPickup = document.getElementById('shipping-pickup');
 
   const checkoutButton = document.getElementById('checkout-button');
 
-  // Modal de eliminación
+  // Modal eliminar
   const deleteModal = document.getElementById('delete-modal');
   const deleteCancelBtn = document.getElementById('delete-cancel');
   const deleteConfirmBtn = document.getElementById('delete-confirm');
 
-  // ---- Estado ----
+  // ----- Estado -----
   let cartItems = [];
-  let shippingMode = 'domicilio'; // 'domicilio' | 'recoger'
-  let pendingDeleteIndex = null;
+  let deleteIndex = null;
 
-  // ---- Helpers ----
+  // ----- Helpers -----
   function formatPrice(value) {
     const n = Number(value || 0);
     return '$' + n.toLocaleString('es-CO');
@@ -44,10 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        cartItems = parsed.map((item) => ({
-          ...item,
-          quantity: item.quantity && item.quantity > 0 ? item.quantity : 1,
-        }));
+        cartItems = parsed;
       } else {
         cartItems = [];
       }
@@ -58,247 +54,261 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function saveCart() {
-    localStorage.setItem('burgerCart', JSON.stringify(cartItems));
+    try {
+      localStorage.setItem('burgerCart', JSON.stringify(cartItems));
+    } catch (err) {
+      console.error('[cart.js] Error guardando burgerCart:', err);
+    }
   }
 
-  function computeLineTotals(item) {
-    const base = Number(item.basePrice || 0);
-    const extrasTotal = Array.isArray(item.extras)
-      ? item.extras.reduce(
-          (acc, ex) => acc + Number(ex.precio || 0),
-          0
-        )
-      : 0;
-    const unitTotal = base + extrasTotal;
-    const qty = Number(item.quantity || 1);
-    const lineTotal = unitTotal * qty;
-
-    return {
-      base,
-      extrasTotal,
-      unitTotal,
-      lineTotal,
-    };
+  function getUnitPrice(item) {
+    const total = Number(item.total || 0);
+    const qty = Number(item.quantity || 1) || 1;
+    return total / qty;
   }
 
   function computeSubtotal() {
     return cartItems.reduce(
-      (acc, item) => acc + computeLineTotals(item).lineTotal,
+      (acc, item) => acc + Number(item.total || 0),
       0
     );
   }
 
-  // ---- Modal de eliminación ----
+  function isDeliverySelected() {
+    return shippingDelivery && shippingDelivery.checked;
+  }
+
+  function updateSummary() {
+    if (!summarySubtotal || !summaryDelivery || !summaryTotal) return;
+
+    const subtotal = computeSubtotal();
+    const delivery = isDeliverySelected() && cartItems.length > 0 ? DELIVERY_FEE : 0;
+    const total = subtotal + delivery;
+
+    summarySubtotal.textContent = formatPrice(subtotal);
+    summaryDelivery.textContent = formatPrice(delivery);
+    summaryTotal.textContent = formatPrice(total);
+  }
+
+  function updateCheckoutButtonState() {
+    if (!checkoutButton) return;
+    const hasItems = cartItems && cartItems.length > 0;
+    checkoutButton.disabled = !hasItems;
+  }
+
+  function showEmptyState() {
+    if (cartEmptyMessage) cartEmptyMessage.classList.remove('hidden');
+    if (orderSummarySection) orderSummarySection.classList.add('hidden');
+    updateCheckoutButtonState();
+  }
+
+  function hideEmptyState() {
+    if (cartEmptyMessage) cartEmptyMessage.classList.add('hidden');
+    if (orderSummarySection) orderSummarySection.classList.remove('hidden');
+    updateCheckoutButtonState();
+  }
+
   function openDeleteModal(index) {
-    pendingDeleteIndex = index;
-    if (!deleteModal) return;
-    deleteModal.classList.remove('hidden');
-    deleteModal.classList.add('flex');
+    deleteIndex = index;
+    if (deleteModal) {
+      deleteModal.classList.remove('hidden');
+      deleteModal.classList.add('flex');
+    }
   }
 
   function closeDeleteModal() {
-    pendingDeleteIndex = null;
-    if (!deleteModal) return;
-    deleteModal.classList.add('hidden');
-    deleteModal.classList.remove('flex');
+    deleteIndex = null;
+    if (deleteModal) {
+      deleteModal.classList.add('hidden');
+      deleteModal.classList.remove('flex');
+    }
   }
 
-  if (deleteCancelBtn) {
-    deleteCancelBtn.addEventListener('click', () => {
-      closeDeleteModal();
-    });
+  function handleQtyMinus(index) {
+    const item = cartItems[index];
+    if (!item) return;
+
+    const qty = Number(item.quantity || 1);
+
+    if (qty > 1) {
+      const newQty = qty - 1;
+      const unitPrice = getUnitPrice(item);
+
+      item.quantity = newQty;
+      item.total = unitPrice * newQty;
+
+      saveCart();
+      renderCart();
+    } else {
+      // qty == 1 → pedir confirmación para eliminar
+      openDeleteModal(index);
+    }
   }
 
-  if (deleteConfirmBtn) {
-    deleteConfirmBtn.addEventListener('click', () => {
-      if (pendingDeleteIndex !== null) {
-        removeItem(pendingDeleteIndex);
-      }
-      closeDeleteModal();
-    });
+  function handleQtyPlus(index) {
+    const item = cartItems[index];
+    if (!item) return;
+
+    const qty = Number(item.quantity || 1);
+    const newQty = qty + 1;
+    const unitPrice = getUnitPrice(item);
+
+    item.quantity = newQty;
+    item.total = unitPrice * newQty;
+
+    saveCart();
+    renderCart();
   }
 
-  // ---- Render de lista de productos ----
-  function renderCartItems() {
+  function deleteItemConfirmed() {
+    if (deleteIndex === null || deleteIndex === undefined) return;
+
+    cartItems.splice(deleteIndex, 1);
+    saveCart();
+    closeDeleteModal();
+    renderCart();
+  }
+
+  function renderCart() {
     if (!cartItemsContainer) return;
 
     cartItemsContainer.innerHTML = '';
 
-    if (!cartItems.length) {
-      if (emptyMessage) emptyMessage.classList.remove('hidden');
-      if (summarySection) summarySection.classList.add('opacity-50');
-      if (checkoutButton) {
-        checkoutButton.disabled = true;
-      }
+    if (!cartItems || cartItems.length === 0) {
+      showEmptyState();
       return;
     }
 
-    if (emptyMessage) emptyMessage.classList.add('hidden');
-    if (summarySection) summarySection.classList.remove('opacity-50');
-    if (checkoutButton) {
-      checkoutButton.disabled = false;
-    }
+    hideEmptyState();
 
     cartItems.forEach((item, index) => {
-      const { unitTotal, lineTotal } = computeLineTotals(item);
+      const unitPrice = getUnitPrice(item);
+      const qty = Number(item.quantity || 1);
+      const lineTotal = Number(item.total || 0);
 
-      const row = document.createElement('div');
-      row.className =
-        'flex gap-4 py-3 border-b border-black/5 dark:border-white/10';
+      const wrapper = document.createElement('div');
+      wrapper.className =
+        'flex items-start gap-4 py-3 border-b border-black/5 dark:border-white/10';
 
-      // Columna izquierda: borrar + text
-      const leftCol = document.createElement('div');
-      leftCol.className = 'flex flex-1 items-start gap-4';
+      wrapper.innerHTML = `
+        <div class="flex flex-1 items-start gap-4">
+          <button
+            class="delete-item-btn flex size-12 shrink-0 items-center justify-center rounded-lg bg-black/5 text-black/60 dark:bg-white/10 dark:text-white/60"
+            data-index="${index}"
+          >
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+          <div class="flex flex-col justify-center text-sm">
+            <p class="font-medium text-black dark:text-white line-clamp-1">
+              ${item.nombre || 'Producto'}
+            </p>
+            <p class="text-xs text-black/60 dark:text-white/60 mt-0.5">
+              Precio unitario: ${formatPrice(unitPrice)}
+            </p>
+            ${
+              Array.isArray(item.extras) && item.extras.length
+                ? `<p class="text-xs text-black/70 dark:text-white/70 mt-0.5">
+                     Adiciones: ${item.extras
+                       .map(
+                         (ex) =>
+                           `${ex.nombre} (${formatPrice(ex.precio || 0)})`
+                       )
+                       .join(', ')}
+                   </p>`
+                : ''
+            }
+            ${
+              Array.isArray(item.modifications) && item.modifications.length
+                ? `<p class="text-xs text-black/70 dark:text-white/70 mt-0.5">
+                     Personalización: ${item.modifications.join(', ')}
+                   </p>`
+                : ''
+            }
+            ${
+              item.tipo === 1 || item.tipo === 3
+                ? `<p class="text-xs text-black/70 dark:text-white/70 mt-0.5">
+                     Término de cocción: ${
+                       item.cooking === 'medio'
+                         ? 'Medio hecha'
+                         : item.cooking === 'bien_cocida'
+                         ? 'Bien cocida'
+                         : 'Normal'
+                     }
+                   </p>`
+                : ''
+            }
+            <p class="text-xs text-black/80 dark:text-white/80 mt-1">
+              Subtotal de este producto: <span class="font-semibold">${formatPrice(
+                lineTotal
+              )}</span>
+            </p>
+          </div>
+        </div>
+        <div class="shrink-0 flex flex-col items-center gap-2">
+          <div class="flex items-center gap-3 text-black dark:text-white">
+            <button
+              class="qty-minus-btn flex h-8 w-8 items-center justify-center rounded-full bg-black/5 text-lg dark:bg-white/10"
+              data-index="${index}"
+            >
+              -
+            </button>
+            <span class="w-5 text-center text-base font-medium">${qty}</span>
+            <button
+              class="qty-plus-btn flex h-8 w-8 items-center justify-center rounded-full bg-primary text-lg text-white"
+              data-index="${index}"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      `;
 
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className =
-        'flex size-10 shrink-0 items-center justify-center rounded-lg bg-black/5 text-black/60 dark:bg:white/10 dark:text-white/60';
-      deleteBtn.innerHTML =
-        '<span class="material-symbols-outlined">delete</span>';
-      deleteBtn.addEventListener('click', () => {
+      cartItemsContainer.appendChild(wrapper);
+    });
+
+    // Enlazar eventos de eliminar
+    const deleteButtons = cartItemsContainer.querySelectorAll('.delete-item-btn');
+    deleteButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        if (!target || !target.getAttribute) return;
+        const indexAttr = target.getAttribute('data-index');
+        const index = Number(indexAttr);
+        if (Number.isNaN(index)) return;
         openDeleteModal(index);
       });
-
-      const textCol = document.createElement('div');
-      textCol.className = 'flex flex-col justify-center text-sm';
-
-      const nameP = document.createElement('p');
-      nameP.className =
-        'font-medium text-black line-clamp-1 dark:text-white';
-      nameP.textContent = item.nombre || 'Producto';
-
-      const priceLine = document.createElement('p');
-      priceLine.className =
-        'text-xs md:text-sm font-normal text-black/70 dark:text-white/70';
-      priceLine.textContent = `Unitario: ${formatPrice(
-        unitTotal
-      )}  ·  x${item.quantity} = ${formatPrice(lineTotal)}`;
-
-      textCol.appendChild(nameP);
-      textCol.appendChild(priceLine);
-
-      // Extras
-      if (Array.isArray(item.extras) && item.extras.length > 0) {
-        const extrasP = document.createElement('p');
-        extrasP.className =
-          'mt-1 text-xs text-black/70 dark:text-white/70';
-        const extrasText = item.extras
-          .map(
-            (ex) =>
-              `${ex.nombre} (${formatPrice(ex.precio || 0)})`
-          )
-          .join(', ');
-        extrasP.textContent = `Adiciones: ${extrasText}`;
-        textCol.appendChild(extrasP);
-      }
-
-      // Modificaciones
-      if (Array.isArray(item.modifications) && item.modifications.length) {
-        const modsP = document.createElement('p');
-        modsP.className =
-          'mt-1 text-xs text-black/70 dark:text-white/70';
-        modsP.textContent = `Modificaciones: ${item.modifications.join(
-          ', '
-        )}`;
-        textCol.appendChild(modsP);
-      }
-
-      // Término de carne
-      if (item.tipo === 1 || item.tipo === 3) {
-        const cookP = document.createElement('p');
-        cookP.className =
-          'mt-1 text-xs text-black/70 dark:text-white/70';
-        let termLabel = 'Normal';
-        if (item.cooking === 'medio') termLabel = 'Medio hecha';
-        else if (item.cooking === 'bien_cocida') termLabel = 'Bien cocida';
-        cookP.textContent = `Término: ${termLabel}`;
-        textCol.appendChild(cookP);
-      }
-
-      leftCol.appendChild(deleteBtn);
-      leftCol.appendChild(textCol);
-
-      // Columna derecha: cantidad
-      const rightCol = document.createElement('div');
-      rightCol.className = 'shrink-0 flex items-center';
-
-      const qtyWrapper = document.createElement('div');
-      qtyWrapper.className =
-        'flex items-center gap-3 text-black dark:text-white';
-
-      const minusBtn = document.createElement('button');
-      minusBtn.className =
-        'flex h-8 w-8 items-center justify-center rounded-full bg-black/5 text-lg dark:bg-white/10';
-      minusBtn.innerHTML =
-        '<span class="material-symbols-outlined">remove</span>';
-      minusBtn.addEventListener('click', () => {
-        if (item.quantity > 1) {
-          updateQuantity(index, item.quantity - 1);
-        } else {
-          // cantidad == 1, preguntar antes de eliminar
-          openDeleteModal(index);
-        }
-      });
-
-      const qtySpan = document.createElement('span');
-      qtySpan.className = 'w-4 text-center text-base font-medium';
-      qtySpan.textContent = String(item.quantity);
-
-      const plusBtn = document.createElement('button');
-      plusBtn.className =
-        'flex h-8 w-8 items-center justify-center rounded-full bg-primary text-lg text-white';
-      plusBtn.innerHTML =
-        '<span class="material-symbols-outlined">add</span>';
-      plusBtn.addEventListener('click', () => {
-        updateQuantity(index, item.quantity + 1);
-      });
-
-      qtyWrapper.appendChild(minusBtn);
-      qtyWrapper.appendChild(qtySpan);
-      qtyWrapper.appendChild(plusBtn);
-
-      rightCol.appendChild(qtyWrapper);
-
-      row.appendChild(leftCol);
-      row.appendChild(rightCol);
-
-      cartItemsContainer.appendChild(row);
     });
+
+    // Enlazar eventos de cantidad
+    const minusButtons = cartItemsContainer.querySelectorAll('.qty-minus-btn');
+    minusButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        if (!target || !target.getAttribute) return;
+        const indexAttr = target.getAttribute('data-index');
+        const index = Number(indexAttr);
+        if (Number.isNaN(index)) return;
+        handleQtyMinus(index);
+      });
+    });
+
+    const plusButtons = cartItemsContainer.querySelectorAll('.qty-plus-btn');
+    plusButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget;
+        if (!target || !target.getAttribute) return;
+        const indexAttr = target.getAttribute('data-index');
+        const index = Number(indexAttr);
+        if (Number.isNaN(index)) return;
+        handleQtyPlus(index);
+      });
+    });
+
+    updateSummary();
+    updateCheckoutButtonState();
   }
 
-  // ---- Render resumen ----
-  function renderSummary() {
-    if (!subtotalEl || !deliveryEl || !totalEl) return;
-
-    const subtotal = computeSubtotal();
-    const deliveryFee =
-      shippingMode === 'domicilio' && cartItems.length ? DELIVERY_FEE : 0;
-    const total = subtotal + deliveryFee;
-
-    subtotalEl.textContent = formatPrice(subtotal);
-    deliveryEl.textContent = formatPrice(deliveryFee);
-    totalEl.textContent = formatPrice(total);
-  }
-
-  // ---- Mutaciones ----
-  function updateQuantity(index, newQty) {
-    if (index < 0 || index >= cartItems.length) return;
-    const safeQty = Math.max(1, Math.min(99, newQty));
-    cartItems[index].quantity = safeQty;
-    saveCart();
-    renderCartItems();
-    renderSummary();
-  }
-
-  function removeItem(index) {
-    if (index < 0 || index >= cartItems.length) return;
-    cartItems.splice(index, 1);
-    saveCart();
-    renderCartItems();
-    renderSummary();
-  }
-
-  // ---- Eventos globales ----
+  // ----- Eventos generales -----
   if (backButton) {
     backButton.addEventListener('click', () => {
       if (window.history.length > 1) {
@@ -315,55 +325,47 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (shippingDeliveryInput) {
-    shippingDeliveryInput.addEventListener('change', () => {
-      if (shippingDeliveryInput.checked) {
-        shippingMode = 'domicilio';
-        renderSummary();
-      }
+  if (shippingDelivery) {
+    shippingDelivery.addEventListener('change', () => {
+      updateSummary();
     });
   }
 
-  if (shippingPickupInput) {
-    shippingPickupInput.addEventListener('change', () => {
-      if (shippingPickupInput.checked) {
-        shippingMode = 'recoger';
-        renderSummary();
-      }
+  if (shippingPickup) {
+    shippingPickup.addEventListener('change', () => {
+      updateSummary();
     });
   }
 
+  // Modal eliminar
+  if (deleteCancelBtn) {
+    deleteCancelBtn.addEventListener('click', () => {
+      closeDeleteModal();
+    });
+  }
+
+  if (deleteConfirmBtn) {
+    deleteConfirmBtn.addEventListener('click', () => {
+      deleteItemConfirmed();
+    });
+  }
+
+  // Confirmar pedido → ir a /confirm
   if (checkoutButton) {
     checkoutButton.addEventListener('click', () => {
-      if (!cartItems.length) return;
-      const subtotal = computeSubtotal();
-      const deliveryFee =
-        shippingMode === 'domicilio' && cartItems.length ? DELIVERY_FEE : 0;
-      const total = subtotal + deliveryFee;
-
-      console.log('[Checkout] carrito:', {
-        cartItems,
-        shippingMode,
-        subtotal,
-        deliveryFee,
-        total,
-      });
-
-      alert(
-        `Pedido listo para enviar.\n\nSubtotal: ${formatPrice(
-          subtotal
-        )}\nDomicilio: ${formatPrice(
-          deliveryFee
-        )}\nTotal: ${formatPrice(total)}`
-      );
+      if (!cartItems || cartItems.length === 0) {
+        alert('Tu carrito está vacío. Agrega productos antes de confirmar el pedido.');
+        return;
+      }
+      // confirm.html lee burgerCart desde localStorage
+      window.location.href = '/confirm';
     });
   }
 
-  // ---- init ----
+  // ----- init -----
   function init() {
     loadCart();
-    renderCartItems();
-    renderSummary();
+    renderCart();
   }
 
   init();

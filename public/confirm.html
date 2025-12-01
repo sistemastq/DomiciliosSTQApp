@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Confirmar pedido</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#ec1313",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221010",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+
+      body {
+        min-height: max(884px, 100dvh);
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .dropdown select {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 0.375rem;
+        border: 1px solid #e5e7eb;
+        background-color: #fff;
+        color: #1f2937;
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l4 4a1 1 0 01-1.414 1.414L10 5.414 6.707 8.707a1 1 0 01-1.414-1.414l4-4A1 1 0 0110 3zm0 14a1 1 0 01-.707-.293l-4-4a1 1 0 011.414-1.414L10 14.586l3.293-3.293a1 1 0 011.414 1.414l-4 4A1 1 0 0110 17z" clip-rule="evenodd"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 1rem;
+      }
+
+      .dropdown select:focus {
+        border-color: #3b82f6;
+        outline: none;
+      }
+
+      .dark .dropdown select {
+        background-color: #1f2937;
+        color: #e5e7eb;
+        border-color: #374151;
+      }
+
+      .dark .dropdown select:focus {
+        border-color: #60a5fa;
+      }
+    </style>
+
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+
+  <body
+    class="font-display bg-background-light dark:bg-background-dark text-black dark:text-white"
+  >
+    <div
+      class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark"
+    >
+      <!-- Top App Bar -->
+      <header
+        class="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/10 bg-background-light px-4 dark:bg-background-dark"
+      >
+        <button
+          id="confirm-back-button"
+          class="flex size-10 items-center justify-center rounded-full text-black dark:text-white"
+        >
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="text-lg font-bold text-black dark:text-white">
+          Confirmar pedido
+        </h1>
+        <div class="size-10"></div>
+      </header>
+
+      <main class="flex-grow pb-28">
+        <div class="p-4 space-y-6 max-w-3xl mx-auto">
+          <!-- Aviso usuario no logueado -->
+          <div
+            id="no-user-warning"
+            class="hidden rounded-xl border border-yellow-500/60 bg-yellow-500/10 px-3 py-2 text-xs md:text-sm text-yellow-100 flex items-start gap-2"
+          >
+            <span class="material-symbols-outlined text-base md:text-lg"
+              >info</span
+            >
+            <p>
+              No has iniciado sesión. Puedes escribir tus datos manualmente
+              abajo, o
+              <a href="/login" class="underline font-semibold text-yellow-100"
+                >iniciar sesión</a
+              >
+              para que se completen automáticamente.
+            </p>
+          </div>
+
+          <!-- Datos del cliente -->
+          <section
+            class="rounded-xl bg-white/90 dark:bg-black/40 p-4 space-y-3 shadow-sm"
+          >
+            <h2
+              class="text-base md:text-lg font-bold mb-1 flex items-center gap-2"
+            >
+              <span class="material-symbols-outlined text-base md:text-lg"
+                >person</span
+              >
+              Datos del cliente
+            </h2>
+
+            <div class="space-y-3">
+              <label class="flex flex-col gap-1 text-xs md:text-sm">
+                <span>Nombre completo</span>
+                <input
+                  id="client-name"
+                  type="text"
+                  class="form-input rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm md:text-base"
+                  placeholder="Escribe tu nombre"
+                />
+              </label>
+
+              <label class="flex flex-col gap-1 text-xs md:text-sm">
+                <span>Correo electrónico (se usa en la tabla pedidos)</span>
+                <input
+                  id="client-email"
+                  type="email"
+                  class="form-input rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm md:text-base"
+                  placeholder="Ej: usuario@correo.com"
+                />
+                <span id="email-error" class="mt-1 text-xs text-red-400 hidden">
+                  Ingresa un correo válido.
+                </span>
+              </label>
+
+              <label class="flex flex-col gap-1 text-xs md:text-sm">
+                <span>Número de celular (+57)</span>
+                <input
+                  id="client-phone"
+                  type="tel"
+                  class="form-input rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm md:text-base"
+                  placeholder="+573001234567"
+                />
+                <span id="phone-error" class="mt-1 text-xs text-red-400 hidden">
+                  El número debe comenzar con +57 y tener 10 dígitos después del
+                  prefijo.
+                </span>
+              </label>
+
+              <label class="flex flex-col gap-1 text-xs md:text-sm">
+                <span>Dirección de entrega</span>
+                <textarea
+                  id="client-address"
+                  rows="2"
+                  class="form-textarea rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm md:text-base resize-y"
+                  placeholder="Ej: Calle 22 #34-78, Barrio Castilla, Casa con parqueadero, timbre azul"
+                ></textarea>
+              </label>
+            </div>
+          </section>
+
+          <!-- Punto de venta -->
+          <section
+            class="rounded-xl bg-white/90 dark:bg-black/40 p-4 space-y-3 shadow-sm"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <h2
+                class="text-base md:text-lg font-bold mb-1 flex items-center gap-2"
+              >
+                <span class="material-symbols-outlined text-base md:text-lg"
+                  >store</span
+                >
+                Punto de venta
+              </h2>
+              <button
+                id="suggest-pv-btn"
+                class="px-3 py-1.5 rounded-full bg-primary text-xs md:text-sm font-semibold text-white flex items-center gap-1"
+              >
+                <span class="material-symbols-outlined text-sm"
+                  >my_location</span
+                >
+                Usar cercano
+              </button>
+            </div>
+
+            <p
+              id="pv-message"
+              class="text-xs md:text-sm text-black/70 dark:text-white/70"
+            >
+              Puedes usar el punto de venta más cercano a tu ubicación o
+              seleccionar uno manualmente por departamento, municipio y barrio.
+            </p>
+
+            <!-- Card del PV seleccionado (sugerido o manual) -->
+            <div
+              id="pv-card"
+              class="hidden mt-2 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 overflow-hidden flex flex-col md:flex-row"
+            >
+              <div class="md:w-32 h-32 md:h-auto flex-shrink-0 bg-black/20">
+                <div
+                  id="pv-image"
+                  class="w-full h-full bg-center bg-cover"
+                ></div>
+              </div>
+              <div class="flex-1 p-3 space-y-1 text-xs md:text-sm">
+                <p id="pv-name" class="font-bold text-sm md:text-base"></p>
+                <p id="pv-address" class="text-black/80 dark:text-white/80"></p>
+                <p
+                  id="pv-whatsapp"
+                  class="text-black/80 dark:text-white/80"
+                ></p>
+                <p
+                  id="pv-extra"
+                  class="text-[11px] md:text-xs text-black/60 dark:text-white/60"
+                >
+                  Esta información se usará para enviar el pedido por WhatsApp y
+                  registrar el pedido en la base de datos.
+                </p>
+              </div>
+            </div>
+
+            <!-- Selector manual de punto de venta -->
+            <div class="mt-4 space-y-2">
+              <p class="text-xs md:text-sm text-black/70 dark:text-white/70">
+                O selecciona el punto de venta manualmente:
+              </p>
+              <div class="relative">
+                <select
+                  id="pv-departamento"
+                  class="block appearance-none w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-blue-500 focus:bg-white focus:dark:bg-gray-800 text-xs md:text-sm"
+                >
+                  <option value="">Departamento</option>
+                  <!-- Opciones dinámicas -->
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300"
+                >
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select
+                  id="pv-municipio"
+                  class="block appearance-none w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-blue-500 focus:bg-white focus:dark:bg-gray-800 text-xs md:text-sm"
+                  disabled
+                >
+                  <option value="">Municipio</option>
+                  <!-- Opciones dinámicas -->
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300"
+                >
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              <div class="relative">
+                <select
+                  id="pv-barrio"
+                  class="block appearance-none w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-blue-500 focus:bg-white focus:dark:bg-gray-800 text-xs md:text-sm"
+                  disabled
+                >
+                  <option value="">Barrio</option>
+                  <!-- Opciones dinámicas -->
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300"
+                >
+                  <svg
+                    class="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Mensaje WhatsApp -->
+          <section
+            class="rounded-xl bg-white/90 dark:bg-black/40 p-4 space-y-3 shadow-sm"
+          >
+            <h2 class="text-base md:text-lg font-bold mb-1">
+              Mensaje de pedido (editable)
+            </h2>
+            <p class="text-xs md:text-sm text-black/70 dark:text-white/70">
+              Este es el mensaje que se enviará al punto de venta por WhatsApp y
+              se guardará en la base de datos. Puedes editarlo libremente antes
+              de enviarlo.
+            </p>
+            <textarea
+              id="order-text"
+              rows="10"
+              class="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 p-3 text-xs md:text-sm whitespace-pre-wrap"
+            ></textarea>
+          </section>
+        </div>
+      </main>
+
+      <!-- Botón WhatsApp fijo abajo -->
+      <footer
+        class="fixed bottom-0 left-0 z-10 w-full border-t border-black/10 bg-background-light p-3 md:p-4 dark:border-white/10 dark:bg-background-dark"
+      >
+        <div class="max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
+          <button
+            id="send-whatsapp-btn"
+            class="flex-1 h-12 md:h-14 rounded-xl bg-green-500 text-white text-sm md:text-base font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            <span class="material-symbols-outlined text-xl">whatsapp</span>
+            <span>Enviar pedido por WhatsApp</span>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="/confirm.js"></script>
+  </body>
+</html>

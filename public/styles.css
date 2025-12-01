@@ -264,3 +264,61 @@ body {
   font-size: 1.25rem;
   cursor: pointer;
 }
+/* Estilos para los contenedores de los dropdowns */
+.dropdown-container {
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dropdown-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Estilos para los dropdowns */
+.dropdown {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path fill="%23000" d="M0 0h10v10H0z"/><path fill="%23fff" d="M5 1.5L2.5 4.5 5 7.5 7.5 4.5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 10px;
+  cursor: pointer;
+}
+
+.dropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilos para las opciones del dropdown */
+.dropdown option {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.dropdown option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Estilos para los dropdowns deshabilitados */
+.dropdown[disabled] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

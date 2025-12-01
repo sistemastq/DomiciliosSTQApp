@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "node build.css.js"
   },
   "keywords": [],
   "author": "",
@@ -15,9 +16,12 @@
   "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.86.0",
+    "autoprefixer": "^10.4.22",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
