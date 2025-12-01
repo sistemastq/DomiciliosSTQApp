@@ -1,0 +1,266 @@
+body {
+  min-height: max(884px, 100dvh);
+}
+
+/* contenedor principal */
+.app-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* botones redondos del header */
+.icon-button {
+  display: flex;
+  max-width: 480px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  height: 2.5rem;
+  width: 2.5rem;
+  background: transparent;
+  color: #000;
+}
+
+.dark .icon-button {
+  color: #f9fafb; /* blanco en modo dark */
+}
+
+/* título del header */
+.header-title {
+  color: #000;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.dark .header-title {
+  color: #f9fafb;
+}
+
+/* ===========================
+   HERO CAROUSEL
+   =========================== */
+.hero-section {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;      /* limita el ancho en desktop */
+  margin: 0 auto;         /* centra el carrusel */
+  height: 14rem;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    height: 18rem;        /* más alto en desktop pero no gigante */
+  }
+}
+
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  display: flex;
+  gap: 0.5rem;
+  transform: translateX(-50%);
+}
+
+/* flechas del carrusel */
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-arrow--left {
+  left: 1rem;
+}
+
+.hero-arrow--right {
+  right: 1rem;
+}
+
+/* barra de categorías bien diferenciada */
+.category-nav {
+  padding-bottom: 0.75rem;
+  padding-top: 0.75rem;
+  /* quita el padding horizontal, lo manejamos en #category-tabs */
+  padding-left: 0;
+  padding-right: 0;
+  position: sticky;
+  top: 72px;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.dark .category-nav {
+  background-color: #111827;
+}
+
+
+/* los tabs de categorías alineados con el carrusel */
+#category-tabs {
+  max-width: 1200px;   /* mismo ancho que el hero-section */
+  margin: 0 auto;      /* centrado */
+}
+
+
+.tab-btn {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-bottom-width: 3px;
+  border-bottom-color: transparent;
+  padding-top: 1rem;
+  padding-bottom: 13px;
+  color: #6b7280; /* gray-500 */
+  white-space: nowrap;
+}
+
+.dark .tab-btn {
+  color: #9ca3af; /* gray-400 */
+}
+
+.tab-btn--active {
+  border-bottom-color: #d92b2b;
+  color: #000;
+}
+
+.dark .tab-btn--active {
+  color: #f9fafb;
+}
+
+.tab-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+}
+
+/* ===========================
+   PRODUCTOS
+   =========================== */
+
+.products-section {
+  padding: 1rem;
+}
+
+/* grid responsive con tarjetas centradas */
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  justify-items: center; /* centra las tarjetas dentro de cada columna */
+}
+
+/* tarjeta de producto, ancho fijo */
+.product-card {
+  width: 16rem;          /* tamaño fijo de tarjeta */
+}
+
+/* imagen de producto, tamaño fijo */
+.product-image {
+  width: 100%;
+  height: 11rem;         /* altura fija en móviles */
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .product-image {
+    height: 12.5rem;     /* un poco más alta en desktop */
+  }
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: #111827;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-image {
+  max-width: 80vw;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.modal-image.zoomed {
+  transform: scale(1.3);
+  cursor: zoom-out;
+}
+
+.modal-caption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  color: #f9fafb;
+  font-size: 1.25rem;
+  cursor: pointer;
+}

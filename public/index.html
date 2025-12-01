@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Burger Delivery Homepage</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#D92B2B",
+              "background-light": "#f8f6f6",
+              "background-dark": "#1E1E1E",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fuentes -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="app-root">
+      <!-- Banner superior -->
+      <div class="bg-[#FFC700] p-2 text-center">
+        <h3 class="text-black tracking-light text-sm font-bold leading-tight">
+          Free delivery from 100,000 COP
+        </h3>
+      </div>
+
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-10 flex items-center bg-background-light dark:bg-background-dark/80 p-4 pb-2 justify-between backdrop-blur-sm"
+      >
+        <div class="flex flex-1 items-center justify-start">
+          <button class="icon-button">
+            <span class="material-symbols-outlined text-2xl">person</span>
+          </button>
+        </div>
+        <h2 class="header-title flex-1 text-center">Burger Logo</h2>
+        <div class="flex flex-1 items-center justify-end gap-2">
+          <button class="icon-button">
+            <span class="material-symbols-outlined text-2xl"
+              >shopping_cart</span
+            >
+          </button>
+          <button class="icon-button">
+            <span class="material-symbols-outlined text-2xl">menu</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- HERO CAROUSEL full width -->
+      <section class="hero-section">
+        <div id="hero-carousel" class="hero-carousel"></div>
+
+        <!-- Flechas navegación -->
+        <button
+          id="hero-prev"
+          class="hero-arrow hero-arrow--left"
+          aria-label="Anterior"
+        >
+          ‹
+        </button>
+        <button
+          id="hero-next"
+          class="hero-arrow hero-arrow--right"
+          aria-label="Siguiente"
+        >
+          ›
+        </button>
+
+        <!-- Dots -->
+        <div id="hero-dots" class="hero-dots"></div>
+      </section>
+
+      <!-- Tabs / Filtros (categorías por tipo, SIN adiciones) -->
+      <nav class="category-nav">
+        <div
+          id="category-tabs"
+          class="flex border-b border-gray-200 dark:border-white/20 justify-between overflow-x-auto"
+        >
+          <button class="tab-btn tab-btn--active" data-tipo="1">
+            <p class="tab-label">Hamburguesas</p>
+          </button>
+          <button class="tab-btn" data-tipo="3">
+            <p class="tab-label">Combos</p>
+          </button>
+          <button class="tab-btn" data-tipo="4">
+            <p class="tab-label">Papas</p>
+          </button>
+          <button class="tab-btn" data-tipo="6">
+            <p class="tab-label">Bebidas</p>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Productos (cargados desde Supabase) -->
+      <section class="products-section">
+        <div id="products-container" class="products-container">
+          <!-- JS inyecta las tarjetas aquí -->
+        </div>
+      </section>
+
+      <!-- Our Story -->
+      <section class="p-4 my-8">
+        <div class="relative rounded-xl overflow-hidden">
+          <img
+            alt="Vintage style photo of a burger on a checkered paper."
+            class="w-full h-64 object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo8_h9aTkCbktARnGTFwl4fzRuu_jefrrSPFTM7lmmptl7Ajc01_AqBpY2n5NTUnn7PNmH8qVcHCBrvQ6F6lZ565W_6w3LHRrnGQ9DrgnZ0N4aVP-eeMkENyxCIcT6GyCftOZK5OzLkRqlboMrYe3WBqDJCrzGTqBdpe8A5KuSV732uS5i8C7PpMNqjjKoO2rm6FZBXUqlrAqcampzfCV3CVtKFeOpUz-C0SylLFQWEo3JhWuVRlvxtCqdW2sePlb2pFffTChnsiU"
+          />
+          <div
+            class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-6 text-center"
+          >
+            <h2
+              class="text-white text-2xl font-extrabold leading-tight tracking-tight mb-2"
+            >
+              Our Story
+            </h2>
+            <p class="text-white/90 text-sm leading-relaxed">
+              Born from a passion for authentic flavors and quality ingredients, our
+              journey began in a small kitchen with one big dream: to craft the
+              perfect burger.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Join Our Community -->
+      <section class="py-8">
+        <h2
+          class="text-black dark:text-white text-xl font-bold leading-tight px-4 text-center mb-4"
+        >
+          Join Our Community
+        </h2>
+        <div class="grid grid-cols-3 gap-1">
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDihG7_HNRuQviQKs2rYNIQtS6RGHRLfK6IrM9SC6vGgNnVZyOmqrlSwv9kcE5sbOCnzF2R4GAQh-pQ_OyFQc6Wat9Wjr-1JG-lhpN0zIokrdU8HZb30tyLyR1_TM9e2Zpu-QBvEYmsmGsW_YK2x8hddHDmKyCpi913S2TcnZeIsrqAi3IMRrRwLtNbmjrCVrcTQPnWG86lDIOz2AX2qPtbvuA0llKXA_0Qg3RnNRlxPbgY2myQCo0Mo8BvlUFvpp4djU4Kfi_ntO8')"
+          ></div>
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDFBwnmVb5K6xm9VdMTIt__TtWmwKoHdR4utoIqJrbMLKjRkL-APOEC4u5T05nh0qGCbY5rfGNhyE5BYkXMWu8LfqLARSfdKX5CPKv788owkaqICDH_hkRGtqyUrQ7lSFSAQe8fO5uFsg1dnRQiF0RRZCKH_wfowIrWb4OpNCZ7zoFeDLFwbsnfojyZArG3GHkXUqzR4FwifIPJw9vfkiwdYNU1Nib1TfabDBm1Fa3UvDd-k1WvZKJfL5faIKdvBF9fjTu-7jx4FWo')"
+          ></div>
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuANpuSikKc6ZFojTorDmN7mkAMpwGtT1IVw26OkKy55c66Bb4gjc7zsykOJoE8eyD1xy41v36aSlyiITiuHFKou34lJz6wHSTxEBvUzc5t03ALwZXzwoqgLjDea__XPJXUD6S4_m48B_bYVeFgEsVc1XfFg4RwL5Pe1kkRg7loktA78mmRF9HrZ5BInOtPj_JeTqqvHuwXjrecSGrVMo1dF7GcOA3QSiPZifyPZ5sPGycVnNSGUidOwHNrdHRLGQn7GwRTgBwF096M')"
+          ></div>
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAuEaCvr317U1H4fngQlHCiR0EUZgWW7W11PNuP1Ndd6_89B6_Da4epK0MyMqeeapnpplHXlJt-eEKxJCND3jm__uy1PnRcmbjCysoertwEgcwn_2aOU8Mr4wyeCq8EPfxmuU9r11OrhZPFVORTKSDCGZCsnqjpICqs9LBuoyj9qhHT-RbzSLoPzEvK_r1ec-x_2RJuAyu-El3LGJiKvf3TDqNoktKqBMVw4NSuMswZTbbXIQSiNrAlh_ts5C08u0DnqYv1g3INRKU')"
+          ></div>
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqOhIRenVlgje0s-UccsUI3gNUBppSQTaQ7TPDgxKHTJyW2oP1A3k5a0ImwUX8tlVVD4k-27MxqHaoMJ1IEujKB6QCvNnLV5IVJ6K5Eh5s8WU1r3bSwue4QBF15nhDlQp3ItmNf_w3mxhiWTU_lOKS8IxxDaNN_OlK0YuDKwq2lSN-cHIntn9-CesY2acDh60ioheow2nNKgf6p5trGoWMd0jxsTYSLxD-Tx-NvM5ZkdgvELhvomykQ_5FAMkT_ZTiEa5PgLN8cM')"
+          ></div>
+          <div
+            class="aspect-square bg-cover bg-center"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQG3zU69YSvWN1R_aGqYmL-DsA57MsSm1td0ZPnRx5LYwU_0PNOTfg-oBxXmkeZ-2pxnnGGKmLYwV0eEVm9e4qw3GwMMy9lfajLpl86MdBwdqNhSXiT9CUI2VsmvrNVM7xA05nYw0HAcLx0vBmpmHToq1B5yhzNjzBGdelDFCh3Wp3I9Fw7Dto9hwzPI3B1WqFnlrrBbvVTYiGCXjo9dYDgPyyvNke1qjh2EiFs_CmH_vwisjsD1STtEZArAXsVFrtTTnmT0-kBKQ')"
+          ></div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-black/90 text-white mt-10">
+        <div class="container mx-auto px-4 py-8">
+          <div class="text-center text-sm text-white/70 flex flex-col gap-2">
+            <p class="text-xs text-white/50 mt-4">
+              © 2024 Burger Store. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- MODAL DE ZOOM PARA EL CARRUSEL -->
+    <div id="image-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <button class="modal-close" aria-label="Cerrar">
+          ✕
+        </button>
+        <img id="modal-image" src="" alt="" class="modal-image" />
+        <p id="modal-caption" class="modal-caption"></p>
+      </div>
+    </div>
+
+    <!-- JS del front -->
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>

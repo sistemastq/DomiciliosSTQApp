@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Detalle de producto</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#ec1313",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221010",
+              "surface-light": "#ffffff",
+              "surface-dark": "#120808",
+              "text-light-primary": "#1A1A1A",
+              "text-dark-primary": "#f8f6f6",
+              "text-light-secondary": "#6b7280",
+              "text-dark-secondary": "#9ca3af",
+              "accent-yellow": "#FFC93C",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fuentes -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+
+    <!-- Tu CSS general (opcional) -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body
+    class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary"
+  >
+    <div class="relative min-h-screen w-full flex flex-col pb-36">
+      <!-- Top App Bar -->
+      <div
+        class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm p-4 pb-2 justify-between"
+      >
+        <button
+          id="back-button"
+          class="text-text-light-primary dark:text-text-dark-primary flex size-10 shrink-0 items-center justify-center rounded-full bg-black/10 dark:bg-white/5"
+        >
+          <span class="material-symbols-outlined text-3xl">arrow_back</span>
+        </button>
+        <h2
+          class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center"
+        >
+          Detalle del producto
+        </h2>
+        <div class="flex size-10 shrink-0 items-center"></div>
+      </div>
+
+      <!-- Imagen principal -->
+      <div class="px-4 pt-2">
+        <div
+          id="product-image"
+          class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl min-h-60"
+          data-alt="Imagen del producto"
+          style="background-image: url('');"
+        ></div>
+      </div>
+
+      <!-- Título, descripción y precio base -->
+      <div class="p-4">
+        <h1
+          id="product-name"
+          class="tracking-tight text-[28px] md:text-[32px] font-bold leading-tight text-left"
+        >
+          Cargando...
+        </h1>
+        <p
+          id="product-description"
+          class="text-text-light-secondary dark:text-text-dark-secondary text-sm md:text-base font-normal leading-normal pt-2"
+        >
+          &nbsp;
+        </p>
+        <p
+          id="product-base-price"
+          class="mt-3 text-lg md:text-xl font-bold text-primary"
+        >
+          &nbsp;
+        </p>
+      </div>
+
+      <!-- Secciones de personalización -->
+      <div class="flex flex-col gap-4 px-4">
+        <!-- Adiciones -->
+        <div
+          class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden"
+        >
+          <button
+            type="button"
+            class="accordion-header w-full flex justify-between items-center p-4"
+            data-target="#extras-panel"
+          >
+            <h3 class="text-lg font-bold">Adiciones</h3>
+            <span
+              class="material-symbols-outlined transition-transform"
+              data-arrow="extras"
+              >expand_more</span
+            >
+          </button>
+          <div
+            id="extras-panel"
+            class="accordion-panel px-4 pb-4 flex flex-col gap-4"
+          >
+            <!-- Aquí el JS inyecta las adiciones desde Supabase -->
+            <p
+              id="extras-empty"
+              class="text-sm text-text-light-secondary dark:text-text-dark-secondary"
+            >
+              Cargando adiciones...
+            </p>
+            <div id="extras-container" class="flex flex-col gap-4"></div>
+          </div>
+        </div>
+
+        <!-- Modificar hamburguesa / combo -->
+        <div
+          id="modify-section"
+          class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden"
+        >
+          <button
+            type="button"
+            class="accordion-header w-full flex justify-between items-center p-4"
+            data-target="#modify-panel"
+          >
+            <h3 class="text-lg font-bold">Modificar hamburguesa / combo</h3>
+            <span
+              class="material-symbols-outlined transition-transform"
+              data-arrow="modify"
+              >expand_more</span
+            >
+          </button>
+          <div
+            id="modify-panel"
+            class="accordion-panel px-4 pb-4 flex flex-col gap-3"
+          >
+            <!-- Checkboxes para quitar ingredientes -->
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-tomate"
+              >
+                <input
+                  id="no-tomate"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin tomate</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-pepinillos"
+              >
+                <input
+                  id="no-pepinillos"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin pepinillos</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-lechuga"
+              >
+                <input
+                  id="no-lechuga"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin lechuga</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-queso-americano"
+              >
+                <input
+                  id="no-queso-americano"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin queso americano</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-salsa-ajo"
+              >
+                <input
+                  id="no-salsa-ajo"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin salsa de ajo</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-tocineta"
+              >
+                <input
+                  id="no-tocineta"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin tocineta</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-salsa-pan"
+              >
+                <input
+                  id="no-salsa-pan"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin salsa de pan</span>
+              </label>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label
+                class="flex items-center space-x-3 flex-1 cursor-pointer"
+                for="no-queso-cheddar"
+              >
+                <input
+                  id="no-queso-cheddar"
+                  type="checkbox"
+                  class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
+                />
+                <span>Sin queso cheddar</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Término de la carne -->
+        <div
+          id="cooking-section"
+          class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden"
+        >
+          <button
+            type="button"
+            class="accordion-header w-full flex justify-between items-center p-4"
+            data-target="#cooking-panel"
+          >
+            <h3 class="text-lg font-bold">Término de la carne</h3>
+            <span
+              class="material-symbols-outlined transition-transform"
+              data-arrow="cooking"
+              >expand_more</span
+            >
+          </button>
+          <div
+            id="cooking-panel"
+            class="accordion-panel px-4 pb-4 flex flex-col gap-2"
+          >
+            <p
+              class="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-2"
+            >
+              Aplica para hamburguesas y combos.
+            </p>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="radio"
+                name="cooking"
+                value="normal"
+                class="h-4 w-4 border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
+                checked
+              />
+              <span>Normal</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="radio"
+                name="cooking"
+                value="medio"
+                class="h-4 w-4 border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
+              />
+              <span>Medio hecha</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+              <input
+                type="radio"
+                name="cooking"
+                value="bien_cocida"
+                class="h-4 w-4 border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
+              />
+              <span>Bien cocida</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra flotante con cantidad y botón -->
+      <div
+        class="fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-surface-dark p-4 border-t border-gray-200 dark:border-gray-800"
+      >
+        <div class="max-w-md mx-auto flex items-center gap-4">
+          <!-- Quantity Stepper -->
+          <div
+            class="flex items-center gap-3 bg-background-light dark:bg-background-dark px-3 py-2 rounded-full"
+          >
+            <button
+              id="qty-decrease"
+              class="flex items-center justify-center size-8 rounded-full text-text-light-primary dark:text-text-dark-primary text-2xl font-bold"
+            >
+              <span class="material-symbols-outlined">remove</span>
+            </button>
+            <span
+              id="qty-value"
+              class="text-lg font-bold w-4 text-center text-text-light-primary dark:text-text-dark-primary"
+              >1</span
+            >
+            <button
+              id="qty-increase"
+              class="flex items-center justify-center size-8 rounded-full bg-accent-yellow text-text-light-primary text-2xl font-bold"
+            >
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+
+          <!-- Add to cart -->
+          <button
+            id="add-to-cart-btn"
+            class="flex-1 bg-primary text-white font-bold py-3 rounded-full flex flex-col items-center justify-center text-sm md:text-base"
+          >
+            <span id="add-to-cart-label">Agregar - $0</span>
+            <span
+              id="add-to-cart-sub"
+              class="text-xs text-white/80 font-normal mt-0.5"
+            ></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/product.js"></script>
+  </body>
+</html>

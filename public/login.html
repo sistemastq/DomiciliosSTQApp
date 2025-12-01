@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Iniciar sesión</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#ec1313",
+              "background-light": "#f8f6f6",
+              "background-dark": "#221010",
+              accent: "#FFCC00",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body
+    class="bg-background-dark text-white font-display min-h-screen flex flex-col"
+  >
+    <div class="flex-1 max-w-md mx-auto w-full px-4 py-6 flex flex-col">
+      <!-- Top App Bar -->
+      <div class="flex items-center mb-4">
+        <button
+          onclick="window.location.href='/'"
+          class="flex size-10 items-center justify-center rounded-full bg-black/30 border border-gray-700"
+        >
+          <span class="material-symbols-outlined text-white text-xl">
+            arrow_back
+          </span>
+        </button>
+        <div class="flex-1 text-center">
+          <h2 class="text-white text-lg font-bold leading-tight">
+            Iniciar sesión
+          </h2>
+        </div>
+        <div class="w-10"></div>
+      </div>
+
+      <!-- Headline -->
+      <div class="pt-2 pb-4">
+        <h1 class="text-white text-[32px] font-bold leading-tight tracking-tight">
+          Bienvenido
+        </h1>
+        <p class="text-gray-400 text-base leading-normal pt-1">
+          Ingresa para ordenar tus hamburguesas favoritas.
+        </p>
+      </div>
+
+      <!-- Formulario de login -->
+      <form id="login-form" class="flex flex-col gap-y-3">
+        <label class="flex flex-col w-full">
+          <p class="text-white text-base font-medium pb-2">Correo</p>
+          <input
+            class="form-input flex w-full rounded-xl text-white border border-gray-700/80 bg-black/30 h-14 px-4 text-base"
+            placeholder="correo@ejemplo.com"
+            type="email"
+            name="correo"
+            required
+          />
+        </label>
+
+        <label class="flex flex-col w-full">
+          <p class="text-white text-base font-medium pb-2">Contraseña</p>
+          <div class="relative w-full">
+            <input
+              class="form-input flex w-full rounded-xl text-white border border-gray-700/80 bg-black/30 h-14 px-4 pr-12 text-base"
+              placeholder="Tu contraseña"
+              type="password"
+              name="contrasena"
+              required
+            />
+            <button
+              type="button"
+              class="toggle-password absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400"
+              data-target="contrasena"
+            >
+              <span class="material-symbols-outlined">visibility_off</span>
+            </button>
+          </div>
+        </label>
+
+        <p
+          id="login-error"
+          class="text-red-500 text-sm font-medium mt-1 hidden"
+        ></p>
+
+        <div class="flex justify-end mt-1">
+          <a
+            href="/recover"
+            class="text-sm text-accent hover:underline font-medium"
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <button
+          type="submit"
+          class="mt-3 flex items-center justify-center h-14 w-full rounded-xl bg-primary px-4 text-base font-bold text-white shadow-sm hover:bg-primary/90"
+        >
+          Iniciar sesión
+        </button>
+      </form>
+
+      <!-- Link a registro -->
+      <div class="mt-4 text-center text-sm text-gray-400">
+        ¿No tienes cuenta?
+        <a href="/register" class="font-bold text-accent hover:underline">
+          Regístrate
+        </a>
+      </div>
+
+      <!-- Botón Volver al inicio -->
+      <div class="mt-6">
+        <button
+          type="button"
+          onclick="window.location.href='/'"
+          class="w-full h-12 rounded-xl border border-gray-700 bg-black/40 text-sm font-medium text-white"
+        >
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+
+    <script type="module" src="/auth.js"></script>
+  </body>
+</html>
