@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Burger Delivery Homepage</title>
+    <title>Domicilios Tierra Querida</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -55,7 +55,7 @@
       <!-- Banner superior -->
       <div class="bg-[#FFC700] p-2 text-center">
         <h3 class="text-black tracking-light text-sm font-bold leading-tight">
-          Free delivery from 100,000 COP
+          Envío gratis en pedidos superiores a $100.000 cop
         </h3>
       </div>
 
@@ -64,22 +64,37 @@
         class="sticky top-0 z-10 flex items-center bg-background-light dark:bg-background-dark/80 p-4 pb-2 justify-between backdrop-blur-sm"
       >
         <div class="flex flex-1 items-center justify-start">
-          <button class="icon-button">
-            <span class="material-symbols-outlined text-2xl">person</span>
-          </button>
-        </div>
-        <h2 class="header-title flex-1 text-center">Burger Logo</h2>
-        <div class="flex flex-1 items-center justify-end gap-2">
-          <button class="icon-button">
-            <span class="material-symbols-outlined text-2xl"
-              >shopping_cart</span
-            >
-          </button>
-          <button class="icon-button">
+          <button class="icon-button" id="menu-icon">
             <span class="material-symbols-outlined text-2xl">menu</span>
           </button>
         </div>
+        <div class="flex-1 text-center">
+          <img src="./img/logo.png" alt="Burger Logo" class="h-8">
+        </div>
+        <div class="flex flex-1 items-center justify-end gap-2">
+          <button class="icon-button" id="user-icon">
+            <span class="material-symbols-outlined text-2xl">person</span>
+          </button>
+          <button class="icon-button" id="cart-icon">
+            <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+            <span class="cart-count" id="cart-count">0</span>
+          </button>
+        </div>
       </header>
+
+      <!-- Menú -->
+      <nav class="menu" id="menu">
+        <ul>
+          <li><a href="/puntos-venta">Punto de Venta</a></li>
+          <li id="logout-link" style="display: none;"><a href="/logout">Cerrar Sesión</a></li>
+        </ul>
+        <button class="close-menu" id="close-menu">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </nav>
+
+      <!-- Overlay -->
+      <div class="overlay" id="overlay"></div>
 
       <!-- HERO CAROUSEL full width -->
       <section class="hero-section">

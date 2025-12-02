@@ -1,5 +1,6 @@
 body {
   min-height: max(884px, 100dvh);
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* contenedor principal */
@@ -25,6 +26,7 @@ body {
   width: 2.5rem;
   background: transparent;
   color: #000;
+  position: relative;
 }
 
 .dark .icon-button {
@@ -122,13 +124,11 @@ body {
   background-color: #111827;
 }
 
-
 /* los tabs de categorías alineados con el carrusel */
 #category-tabs {
   max-width: 1200px;   /* mismo ancho que el hero-section */
   margin: 0 auto;      /* centrado */
 }
-
 
 .tab-btn {
   display: flex;
@@ -264,6 +264,7 @@ body {
   font-size: 1.25rem;
   cursor: pointer;
 }
+
 /* Estilos para los contenedores de los dropdowns */
 .dropdown-container {
   margin-bottom: 15px;
@@ -319,6 +320,63 @@ body {
   background-color: #f0f0f0;
   cursor: not-allowed;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* Menú */
+.menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  transition: left 0.3s;
+  z-index: 1000;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.menu ul li {
+  padding: 15px;
+  border-bottom: 1px solid #555;
+}
+
+.menu ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.close-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .menu {
+    width: 100%;
+  }
+
+  .menu ul li {
+    text-align: center;
+  }
+}

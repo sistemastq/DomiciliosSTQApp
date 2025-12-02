@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (selectedPV) {
       headerLines.push(
         `🏬 *Punto de venta:* ${pvNameText}`,
-        `📍 \${pvAddrText}`,
+        `📍 ${pvAddrText}`,
         selectedPV.num_whatsapp
           ? `📞 WhatsApp: ${selectedPV.num_whatsapp}`
           : ""

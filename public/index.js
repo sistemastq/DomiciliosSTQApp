@@ -1,31 +1,53 @@
-// public/index.js
-
-// Estructuras (solo referencia mental):
-// MenuItem {
-//   id, Nombre, Descripcion,
-//   PrecioOriente, PrecioRestoPais, PrecioAreaMetrop,
-//   tipo, Activo, imagen
-// }
-
-// tipos en BD:
-// 1 = hamburguesa
-// 2 = adiciones (NO se muestra en tabs)
-// 3 = combos
-// 4 = papas
-// 6 = bebidas
-
 document.addEventListener('DOMContentLoaded', () => {
   // =============================
   // HEADER: botones usuario / carrito
   // =============================
-  const userButton = document.querySelector(
-    'header .flex.flex-1.items-center.justify-start .icon-button'
-  );
+  const userButton = document.getElementById('user-icon');
+  const cartButton = document.getElementById('cart-icon');
+  const menuIcon = document.getElementById('menu-icon');
+  const menu = document.getElementById('menu');
+  const overlay = document.getElementById('overlay');
+  const cartCount = document.getElementById('cart-count');
+  const logoutLink = document.getElementById('logout-link');
+  const closeMenuButton = document.getElementById('close-menu');
 
-  const rightButtons = document.querySelectorAll(
-    'header .flex.flex-1.items-center.justify-end .icon-button'
-  );
-  const cartButton = rightButtons[0] || null;
+  // Función para abrir y cerrar el menú
+  function toggleMenu() {
+    menu.classList.toggle('open');
+    overlay.classList.toggle('active');
+  }
+
+  // Función para cerrar el menú cuando se hace clic fuera de él
+  function closeMenuOnClickOutside(event) {
+    if (menu.classList.contains('open') && !menu.contains(event.target) && !menuIcon.contains(event.target)) {
+      toggleMenu();
+    }
+  }
+
+  // Función para actualizar el contador del carrito
+  function updateCartCount() {
+    const cartItems = JSON.parse(localStorage.getItem('burgerCart')) || [];
+    cartCount.textContent = cartItems.length;
+  }
+
+  // Función para mostrar u ocultar el enlace de cerrar sesión
+  function toggleLogoutLink() {
+    const userData = JSON.parse(localStorage.getItem('burgerUser'));
+    if (userData) {
+      logoutLink.style.display = 'block';
+    } else {
+      logoutLink.style.display = 'none';
+    }
+  }
+
+  // Event listeners
+  menuIcon.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+  closeMenuButton.addEventListener('click', toggleMenu);
+  document.addEventListener('click', closeMenuOnClickOutside);
+  cartButton.addEventListener('click', () => {
+    window.location.href = '/cart';
+  });
 
   if (userButton) {
     userButton.addEventListener('click', () => {
@@ -305,4 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // cargar hamburguesas por defecto
   loadCategory(1);
-});
+
+  // Inicialización
+  updateCartCount();
+  toggleLogoutLink();
+}); 

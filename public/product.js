@@ -1,3 +1,5 @@
+// public/product.js
+
 // Estructura que viene de /api/menu/item/:id
 // MenuItem {
 //   id, Nombre, Descripcion,
@@ -112,7 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch data
   // =============================
   async function fetchProduct(id) {
-    const res = await fetch(`/api/menu/item/\${id}`);
+    // AQUÍ estaba el bug: tenía `/api/menu/item/\${id}`
+    const res = await fetch(`/api/menu/item/${id}`);
     if (!res.ok) {
       throw new Error('No se pudo cargar el producto');
     }
@@ -120,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function fetchExtras() {
-    const res = await fetch('/api/menu?tipo=2');
+    const res = await fetch('/api/menu?tipo=2'); // adiciones
     if (!res.ok) {
       console.error('No se pudieron cargar adiciones');
       return [];
@@ -138,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (productImage) {
       productImage.style.backgroundImage = product.imagen
-        ? `url('\${product.imagen}')`
+        ? `url('${product.imagen}')`
         : '';
     }
     if (productNameEl) {
@@ -148,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
       productDescriptionEl.textContent = product.Descripcion;
     }
     if (productBasePriceEl) {
-      productBasePriceEl.textContent = `Precio base: \${formatPrice(priceBase)}`;
+      productBasePriceEl.textContent = `Precio base: ${formatPrice(priceBase)}`;
     }
 
     // 1 = hamburguesa, 3 = combo → tienen adiciones / modificar / término
@@ -193,21 +196,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = document.createElement('div');
       row.className = 'flex items-center justify-between';
 
-      const id = `extra-\${extra.id}`;
+      const id = `extra-${extra.id}`;
 
       row.innerHTML = `
-        <label class="flex items-center space-x-3 flex-1 cursor-pointer" for="\${id}">
+        <label class="flex items-center space-x-3 flex-1 cursor-pointer" for="${id}">
           <input
-            id="\${id}"
+            id="${id}"
             type="checkbox"
-            data-extra-id="\${extra.id}"
-            data-extra-price="\${price}"
+            data-extra-id="${extra.id}"
+            data-extra-price="${price}"
             class="h-5 w-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary bg-transparent dark:bg-transparent"
           />
-          <span class="text-base text-text-light-primary dark:text-text-dark-primary">\${extra.Nombre}</span>
+          <span class="text-base text-text-light-primary dark:text-text-dark-primary">${extra.Nombre}</span>
         </label>
         <span class="text-base font-medium text-text-light-secondary dark:text-text-dark-secondary">
-          +\${formatPrice(price)}
+          +${formatPrice(price)}
         </span>
       `;
 
@@ -241,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const grandTotal = unitTotal * quantity;
 
     if (addToCartLabel) {
-      addToCartLabel.textContent = `Agregar al carrito - \${formatPrice(
+      addToCartLabel.textContent = `Agregar al carrito - ${formatPrice(
         grandTotal
       )}`;
     }
@@ -251,11 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
         addToCartSub.textContent =
           `Base: ${formatPrice(basePrice)} + adiciones: ${formatPrice(
             extrasTotal
-          )} x \${quantity}`;
+          )} x ${quantity}`;
       } else {
         addToCartSub.textContent =
           quantity > 1
-            ? `Unitario: \${formatPrice(basePrice)} x ${quantity}`
+            ? `Unitario: ${formatPrice(basePrice)} x ${quantity}`
             : `Unitario: ${formatPrice(basePrice)}`;
       }
     }
@@ -308,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // si quieres que inicien abiertos:
   document.querySelectorAll('.accordion-panel').forEach((panel) => {
     panel.classList.remove('hidden');
   });
@@ -316,7 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Helpers de personalización
   // =============================
   function getCooking() {
-    const selected = document.querySelector('input[name="cooking"]:checked');
+    const selected = document.querySelector(
+      'input[name="cooking"]:checked'
+    );
     return selected ? selected.value : 'normal';
   }
 
