@@ -1,4 +1,3 @@
-// src/server.ts
 import express, { Request, Response } from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -53,6 +52,10 @@ app.get('/cart', (_req: Request, res: Response) => {
 
 app.get('/confirm', (_req: Request, res: Response) => {
   res.sendFile(path.join(publicPath, 'confirm.html'));
+});
+
+app.get('/stores', (_req: Request, res: Response) => {
+  res.sendFile(path.join(publicPath, 'store.html'));
 });
 
 // -------------------- API MENÚ --------------------

@@ -35,7 +35,7 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.supabase = void 0;
 // src/supabaseClient.ts
-const supabase_js_2 = require("@supabase/supabase-js");
+const supabase_js_1 = require("@supabase/supabase-js");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -44,4 +44,4 @@ if (!supabaseUrl || !supabaseKey) {
     throw new Error('Faltan SUPABASE_URL o SUPABASE_KEY en el archivo .env');
 }
 // IMPORTANTE: esta key es service_role, solo debe usarse en el backend
-exports.supabase = (0, supabase_js_2.createClient)(supabaseUrl, supabaseKey);
+exports.supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);

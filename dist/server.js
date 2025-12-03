@@ -21,7 +21,7 @@ const supabase = (0, supabase_js_1.createClient)(SUPABASE_URL, SUPABASE_KEY);
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Rutas estáticas
+// -------------------- RUTAS ESTÁTICAS --------------------
 const publicPath = path_1.default.join(__dirname, '..', 'public');
 app.use(express_1.default.static(publicPath));
 // -------------------- RUTAS DE PÁGINAS --------------------
@@ -43,7 +43,6 @@ app.get('/product', (_req, res) => {
 app.get('/cart', (_req, res) => {
     res.sendFile(path_1.default.join(publicPath, 'cart.html'));
 });
-// NUEVA PÁGINA DE CONFIRMACIÓN
 app.get('/confirm', (_req, res) => {
     res.sendFile(path_1.default.join(publicPath, 'confirm.html'));
 });
@@ -209,6 +208,7 @@ app.post('/api/auth/recover', async (req, res) => {
             return res.status(500).json({ message: 'Error en el servidor' });
         }
         console.log('[Recover] Solicitud de recuperación para:', correo, 'existe?', !!user);
+        // Aquí iría la lógica de envío de correo si implementas un servicio de emails.
         return res.json({
             message: 'Si el correo existe, te enviaremos instrucciones.',
         });
@@ -219,7 +219,6 @@ app.post('/api/auth/recover', async (req, res) => {
     }
 });
 // -------------------- API PUNTOS DE VENTA --------------------
-// GET /api/puntos-venta  -> Coordenadas_PV
 app.get('/api/puntos-venta', async (_req, res) => {
     try {
         const { data, error } = await supabase
@@ -237,13 +236,9 @@ app.get('/api/puntos-venta', async (_req, res) => {
     }
 });
 // -------------------- API PEDIDOS --------------------
-// POST /api/pedidos
-// nombre_cliente = correo electrónico
-// resumen_pedido = mensaje completo
-// direccion_cliente, celular_cliente, estado='Recibido', puntoventa = PV elegido
 app.post('/api/pedidos', async (req, res) => {
     try {
-        const { nombre_cliente, // aquí esperamos el correo electrónico
+        const { nombre_cliente, // correo electrónico
         resumen_pedido, direccion_cliente, celular_cliente, puntoventa, } = req.body;
         if (!nombre_cliente || !resumen_pedido || !direccion_cliente || !celular_cliente) {
             return res.status(400).json({
@@ -275,22 +270,25 @@ app.post('/api/pedidos', async (req, res) => {
         res.status(500).json({ message: 'Error inesperado en el servidor' });
     }
 });
-// -------------------- API USUARIO --------------------
-// GET /api/auth/user
+// -------------------- API USUARIO (SIN SESIÓN) --------------------
+// GET /api/auth/user?correo=alguien@mail.com
 app.get('/api/auth/user', async (req, res) => {
     try {
-        const userId = req.session.userId; // Supongamos que el ID del usuario está en la sesión
-        if (!userId) {
-            return res.status(401).json({ message: 'Usuario no autenticado' });
+        const correo = req.query.correo || '';
+        if (!correo) {
+            return res.status(400).json({ message: 'Correo es obligatorio' });
         }
         const { data: user, error: userError } = await supabase
             .from('usuarios')
             .select('id, correo, "Contrasena", "Rol"')
-            .eq('id', userId)
+            .eq('correo', correo)
             .maybeSingle();
         if (userError) {
             console.error('[GET /api/auth/user] error supabase:', userError);
             return res.status(500).json({ message: 'Error al obtener datos del usuario' });
+        }
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
         const { data: form, error: formError } = await supabase
             .from('formulario')

@@ -57,7 +57,7 @@
       }
     </style>
 
-    <!-- Tu CSS general (opcional) -->
+    <!-- Tu CSS general -->
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body
@@ -82,40 +82,45 @@
         <div class="flex size-10 shrink-0 items-center"></div>
       </div>
 
-      <!-- Imagen principal -->
-      <div class="px-4 pt-2">
-        <div
-          id="product-image"
-          class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-xl min-h-60"
-          data-alt="Imagen del producto"
-          style="background-image: url('');"
-        ></div>
-      </div>
+      <!-- BLOQUE PRINCIPAL: imagen + info lado a lado en pantallas grandes -->
+      <section class="px-4 pt-2">
+        <div class="product-detail-layout max-w-5xl mx-auto">
+          <!-- Imagen -->
+          <div class="product-detail-image-wrapper">
+            <div
+              id="product-image"
+              class="product-detail-image"
+              data-alt="Imagen del producto"
+              style="background-image: url('');"
+            ></div>
+          </div>
 
-      <!-- Título, descripción y precio base -->
-      <div class="p-4">
-        <h1
-          id="product-name"
-          class="tracking-tight text-[28px] md:text-[32px] font-bold leading-tight text-left"
-        >
-          Cargando...
-        </h1>
-        <p
-          id="product-description"
-          class="text-text-light-secondary dark:text-text-dark-secondary text-sm md:text-base font-normal leading-normal pt-2"
-        >
-          &nbsp;
-        </p>
-        <p
-          id="product-base-price"
-          class="mt-3 text-lg md:text-xl font-bold text-primary"
-        >
-          &nbsp;
-        </p>
-      </div>
+          <!-- Info: título, descripción, precio -->
+          <div class="product-detail-info">
+            <h1
+              id="product-name"
+              class="tracking-tight text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-tight text-left"
+            >
+              Cargando...
+            </h1>
+            <p
+              id="product-description"
+              class="text-text-light-secondary dark:text-text-dark-secondary text-sm md:text-base font-normal leading-normal pt-2"
+            >
+              &nbsp;
+            </p>
+            <p
+              id="product-base-price"
+              class="mt-3 text-lg md:text-xl lg:text-2xl font-bold text-primary"
+            >
+              &nbsp;
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <!-- Secciones de personalización -->
-      <div class="flex flex-col gap-4 px-4">
+      <!-- Secciones de personalización (debajo, centradas y con ancho limitado) -->
+      <section class="flex flex-col gap-4 px-4 max-w-5xl mx-auto w-full mt-4">
         <!-- Adiciones -->
         <div
           class="bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden"
@@ -136,7 +141,6 @@
             id="extras-panel"
             class="accordion-panel px-4 pb-4 flex flex-col gap-4"
           >
-            <!-- Aquí el JS inyecta las adiciones desde Supabase -->
             <p
               id="extras-empty"
               class="text-sm text-text-light-secondary dark:text-text-dark-secondary"
@@ -168,7 +172,6 @@
             id="modify-panel"
             class="accordion-panel px-4 pb-4 flex flex-col gap-3"
           >
-            <!-- Checkboxes para quitar ingredientes -->
             <div class="flex items-center justify-between">
               <label
                 class="flex items-center space-x-3 flex-1 cursor-pointer"
@@ -339,14 +342,13 @@
             </label>
           </div>
         </div>
-      </div>
+      </section>
 
       <!-- Barra flotante con cantidad y botón -->
       <div
         class="fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-surface-dark p-4 border-t border-gray-200 dark:border-gray-800"
       >
         <div class="max-w-md mx-auto flex items-center gap-4">
-          <!-- Quantity Stepper -->
           <div
             class="flex items-center gap-3 bg-background-light dark:bg-background-dark px-3 py-2 rounded-full"
           >
@@ -369,7 +371,6 @@
             </button>
           </div>
 
-          <!-- Add to cart -->
           <button
             id="add-to-cart-btn"
             class="flex-1 bg-primary text-white font-bold py-3 rounded-full flex flex-col items-center justify-center text-sm md:text-base"

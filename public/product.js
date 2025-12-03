@@ -1,5 +1,3 @@
-// public/product.js
-
 // Estructura que viene de /api/menu/item/:id
 // MenuItem {
 //   id, Nombre, Descripcion,
@@ -114,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch data
   // =============================
   async function fetchProduct(id) {
-    // AQUÍ estaba el bug: tenía `/api/menu/item/\${id}`
     const res = await fetch(`/api/menu/item/${id}`);
     if (!res.ok) {
       throw new Error('No se pudo cargar el producto');
@@ -123,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function fetchExtras() {
-    const res = await fetch('/api/menu?tipo=2'); // adiciones
+    const res = await fetch('/api/menu?tipo=2');
     if (!res.ok) {
       console.error('No se pudieron cargar adiciones');
       return [];
@@ -159,13 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const esHamburguesaOCombo = product.tipo === 1 || product.tipo === 3;
 
     if (!esHamburguesaOCombo) {
-      // ocultar sección de adiciones
       if (extrasPanel && extrasPanel.parentElement) {
         extrasPanel.parentElement.classList.add('hidden');
       }
-      // ocultar modificar
       if (modifySection) modifySection.classList.add('hidden');
-      // ocultar término de carne
       if (cookingSection) cookingSection.classList.add('hidden');
     }
   }
@@ -223,7 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // =============================
   function getSelectedExtrasTotal() {
     if (!extrasContainer) return 0;
-    const inputs = extrasContainer.querySelectorAll('input[type="checkbox"]');
+    const inputs = extrasContainer.querySelectorAll(
+      'input[type="checkbox"]'
+    );
     let total = 0;
     inputs.forEach((input) => {
       if (input.checked) {
@@ -311,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // si quieres que inicien abiertos:
   document.querySelectorAll('.accordion-panel').forEach((panel) => {
     panel.classList.remove('hidden');
   });
@@ -320,9 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Helpers de personalización
   // =============================
   function getCooking() {
-    const selected = document.querySelector(
-      'input[name="cooking"]:checked'
-    );
+    const selected = document.querySelector('input[name="cooking"]:checked');
     return selected ? selected.value : 'normal';
   }
 
@@ -415,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.push(lineItem);
         localStorage.setItem('burgerCart', JSON.stringify(cart));
 
-        // una vez agregado con éxito → ir al carrito
+        // ir al carrito
         window.location.href = '/cart';
       } catch (err) {
         console.error('[product.js] Error guardando en carrito:', err);
