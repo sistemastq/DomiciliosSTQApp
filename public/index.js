@@ -589,7 +589,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Al hacer click en el botón, ir a la página de producto
     const detailBtn = card.querySelector(".product-go-detail");
     if (detailBtn) {
       detailBtn.addEventListener("click", (e) => {
@@ -598,7 +597,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Opcional: click en toda la tarjeta también lleva al detalle
     card.addEventListener("click", () => {
       window.location.href = `/product?id=${item.id}`;
     });

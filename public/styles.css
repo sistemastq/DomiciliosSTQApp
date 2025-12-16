@@ -1,6 +1,17 @@
+/* ===========================
+   BASE
+   =========================== */
+
 body {
   min-height: max(884px, 100dvh);
   font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
 }
 
 /* contenedor principal */
@@ -14,8 +25,21 @@ body {
 }
 
 /* ===========================
+   UTILIDAD: OCULTAR SCROLLBAR
+   =========================== */
+
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Edge */
+}
+
+/* ===========================
    BOTONES DEL HEADER / ICONOS
    =========================== */
+
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -30,11 +54,18 @@ body {
   border: none;
   padding: 0;
   position: relative;
-  overflow: visible; /* importante: no recortar el badge del carrito */
+  overflow: visible; /* no recortar badge carrito */
 }
 
 .dark .icon-button {
-  color: #f9fafb; /* blanco en modo dark */
+  color: #f9fafb;
+}
+
+@media (min-width: 1024px) {
+  .icon-button {
+    height: 2.75rem;
+    width: 2.75rem;
+  }
 }
 
 /* contador del carrito */
@@ -46,29 +77,26 @@ body {
   border-radius: 9999px;
 }
 
-/* título del header (por si se usa en otras páginas) */
-.header-title {
-  color: #000;
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-.dark .header-title {
-  color: #f9fafb;
-}
-
 /* ===========================
    HERO CAROUSEL
    =========================== */
 
-/* Contenedor del hero (no gigante, pero usando ancho de la página) */
+/* Sección completa, con padding lateral para que el "card" respire */
 .hero-section {
   position: relative;
   width: 100%;
-  max-width: 1200px;
   margin: 0.75rem auto 0;
-  border-radius: 1rem;
+  padding-inline: clamp(0.75rem, 4vw, 3rem);
+  box-sizing: border-box;
+}
+
+/* Contenedor central tipo card que imita el ejemplo verde */
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  border-radius: 1.25rem;
   overflow: hidden;
   background: radial-gradient(
     circle at top,
@@ -76,51 +104,34 @@ body {
     #020617 55%,
     #000 100%
   );
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* En pantallas grandes le damos una altura mínima bonita */
+/* altura mínima en desktop */
 @media (min-width: 1024px) {
-  .hero-section {
+  .hero-carousel {
     min-height: 320px;
   }
 }
 
-
-.hero-carousel {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* Slide contenedor (se apilan uno encima de otro con opacidad) */
+/* slide base */
 .hero-slide {
   width: 100%;
-  display: none;             /* no ocupa espacio si no está activa */
+  display: none;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
-/* Sólo el slide activo se ve y ocupa espacio */
 .hero-slide.hero-slide--active {
   display: block;
   opacity: 1;
 }
 
-
-
-/* Layout interno: imagen + texto */
+/* layout interno */
 .hero-slide-inner {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-/* En móvil: imagen arriba, texto abajo, sin que el texto quede pegado al header */
-@media (max-width: 767px) {
-  .hero-slide-inner {
-    padding-top: 0.25rem;
-  }
 }
 
 @media (min-width: 768px) {
@@ -129,100 +140,94 @@ body {
   }
 }
 
-/* Zona de la imagen */
+/* zona imagen */
 .hero-slide-image {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
 }
 
 .hero-slide-image img {
   width: 100%;
-  max-width: 430px;
+  max-width: 480px;
   height: 100%;
-  object-fit: contain; /* se ve completa, sin zoom agresivo */
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  object-fit: contain;
+  border-radius: 0.9rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
-/* Zona de texto con degradado */
+/* zona texto */
 .hero-slide-text {
   flex: 1;
-  padding: 1rem 1.25rem 1.25rem;
+  padding: 1rem 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   color: #f9fafb;
-
-  /* Degradado mejorado:
-     - un negro profundo
-     - un toque rojo vino
-     - con algo de transparencia para no matar la imagen en los bordes
-  */
   background: linear-gradient(
     135deg,
     rgba(3, 7, 18, 0.96) 0%,
     rgba(24, 24, 27, 0.94) 30%,
-    rgba(127, 29, 29, 0.85) 100%
+    rgba(127, 29, 29, 0.88) 100%
   );
 }
 
 @media (min-width: 768px) {
   .hero-slide-text {
-    padding: 1.4rem 2rem;
+    padding: 1.5rem 2.1rem;
   }
 }
 
 .hero-tagline {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #fbbf24; /* amarillo suave */
+  letter-spacing: 0.14em;
+  color: #fbbf24;
   font-weight: 600;
 }
 
 .hero-title {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   line-height: 1.25;
   font-weight: 800;
 }
 
 @media (min-width: 768px) {
   .hero-title {
-    font-size: 1.7rem;
+    font-size: 1.9rem;
   }
 }
 
 .hero-desc {
-  font-size: 0.8rem;
-  line-height: 1.4;
-  max-width: 26rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  max-width: 28rem;
   color: #e5e7eb;
 }
 
 @media (min-width: 768px) {
   .hero-desc {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 }
 
 .hero-cta {
-  margin-top: 0.4rem;
+  margin-top: 0.6rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.5rem 0.9rem;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 9999px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   background: #d92b2b;
   color: #f9fafb;
   border: 1px solid rgba(248, 250, 252, 0.18);
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(217, 43, 43, 0.45);
+  box-shadow: 0 8px 24px rgba(217, 43, 43, 0.55);
 }
 
 .hero-cta span.material-symbols-outlined {
@@ -239,42 +244,56 @@ body {
   transform: translateX(-50%);
 }
 
-/* Flechas del carrusel */
+/* Flechas */
 .hero-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 2.6rem;
+  width: 2.6rem;
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(15, 23, 42, 0.85);
   color: #fff;
   font-size: 1.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6);
 }
 
 .hero-arrow--left {
-  left: 1rem;
+  left: clamp(1rem, 4vw, 2.5rem);
 }
 
 .hero-arrow--right {
-  right: 1rem;
+  right: clamp(1rem, 4vw, 2.5rem);
+}
+
+/* En móvil las flechas se acercan a los bordes del card */
+@media (max-width: 767px) {
+  .hero-arrow {
+    height: 2.3rem;
+    width: 2.3rem;
+  }
+
+  .hero-arrow--left {
+    left: 1.1rem;
+  }
+
+  .hero-arrow--right {
+    right: 1.1rem;
+  }
 }
 
 /* ===========================
    BARRA DE CATEGORÍAS
    =========================== */
 
-/* Base: en móvil NO pegamos la barra, para que no tape el hero */
 .category-nav {
   padding-bottom: 0.75rem;
   padding-top: 0.75rem;
-  padding-left: 0;
-  padding-right: 0;
   position: relative;
   top: auto;
   z-index: 10;
@@ -286,31 +305,29 @@ body {
   background-color: #030712;
 }
 
-/* En pantallas medianas/grandes sí la hacemos sticky */
-@media (min-width: 768px) {
-  .category-nav {
-    position: sticky;
-    top: 80px; /* debajo de header + banner aprox */
-  }
-}
-
-/* contenedor de tabs alineado con el hero y scrolleable */
+/* contenedor de tabs */
 #category-tabs {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   gap: 0.75rem;
-  padding: 0 1rem;
-
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
+  padding-inline: 0.25rem;
+  align-items: center;
 }
 
-#category-tabs::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+/* En escritorio centramos; en móvil alineamos a la izquierda */
+@media (min-width: 768px) {
+  #category-tabs {
+    justify-content: center;
+  }
 }
 
-/* cada tab ocupa sólo lo que necesita, así se puede hacer scroll horizontal */
+@media (max-width: 767px) {
+  #category-tabs {
+    justify-content: flex-start;
+  }
+}
+
 .tab-btn {
   display: flex;
   flex: 0 0 auto;
@@ -319,15 +336,15 @@ body {
   justify-content: center;
   border-bottom-width: 3px;
   border-bottom-color: transparent;
-  padding-top: 0.75rem;
+  padding-top: 0.6rem;
   padding-bottom: 10px;
-  padding-inline: 0.75rem;
-  color: #6b7280; /* gray-500 */
+  padding-inline: 0.85rem;
+  color: #6b7280;
   white-space: nowrap;
 }
 
 .dark .tab-btn {
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
 }
 
 .tab-btn--active {
@@ -340,9 +357,15 @@ body {
 }
 
 .tab-label {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.015em;
+}
+
+@media (min-width: 1024px) {
+  .tab-label {
+    font-size: 0.95rem;
+  }
 }
 
 /* ===========================
@@ -350,42 +373,19 @@ body {
    =========================== */
 
 .products-section {
-  padding: 1.75rem 1rem 2.5rem;
+  padding: 1.75rem 0 2.5rem;
   background: radial-gradient(circle at top, #111827 0, #020617 60%, #000 100%);
 }
 
-/* grid responsive:
-   - 1 columna en móvil
-   - 2 columnas en tablet
-   - 3 columnas en laptop
-   - 4 columnas en pantallas muy grandes
-*/
-.products-container {
-  display: grid;
-  gap: 1.25rem;
-  max-width: 1200px;
-  margin: 0 auto;
+/* El contenedor real de tarjetas lo controla index.js; aquí sólo estilo base */
+#products-container > article {
+  /* nada especial; las cards se crean en JS con clases propias */
 }
 
-@media (min-width: 640px) {
-  .products-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
+/* ===========================
+   PRODUCTO: CARD (usada en index.js)
+   =========================== */
 
-@media (min-width: 1024px) {
-  .products-container {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1440px) {
-  .products-container {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* tarjeta de producto */
 .product-card {
   display: flex;
   flex-direction: column;
@@ -401,7 +401,6 @@ body {
   background-color: rgba(15, 23, 42, 0.95);
 }
 
-/* imagen del producto */
 .product-image {
   width: 100%;
   height: clamp(150px, 22vw, 210px);
@@ -413,6 +412,7 @@ body {
 /* ===========================
    MODAL (CARRUSEL / IMÁGENES)
    =========================== */
+
 .modal {
   position: fixed;
   inset: 0;
@@ -477,73 +477,13 @@ body {
 }
 
 /* ===========================
-   DROPDOWNS (PUNTOS DE VENTA, ETC.)
-   =========================== */
-
-.dropdown-container {
-  margin-bottom: 15px;
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  max-width: 300px;
-}
-
-.dropdown-container label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-/* Estilos para los dropdowns */
-.dropdown {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%23000' d='M0 0h10v10H0z'/><path fill='%23fff' d='M5 1.5L2.5 4.5 5 7.5 7.5 4.5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 10px 10px;
-  cursor: pointer;
-}
-
-.dropdown:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Estilos para las opciones del dropdown */
-.dropdown option {
-  padding: 10px;
-  font-size: 16px;
-  background-color: #fff;
-}
-
-.dropdown option:hover {
-  background-color: #f0f0f0;
-}
-
-/* Estilos para los dropdowns deshabilitados */
-.dropdown[disabled] {
-  background-color: #f0f0f0;
-  cursor: not-allowed;
-}
-
-/* ===========================
    MENÚ LATERAL / OVERLAY
    =========================== */
 
-/* menú hamburguesa lateral, sale por la derecha */
 .menu {
   position: fixed;
-  top: 3.5rem; /* debajo del header ~56px */
-  right: -260px; /* oculto inicialmente */
+  top: 3.5rem;
+  right: -260px;
   width: 260px;
   height: calc(100% - 3.5rem);
   background-color: #111827;
@@ -591,7 +531,6 @@ body {
   cursor: pointer;
 }
 
-/* overlay para background oscuro cuando el menú está abierto */
 .overlay {
   position: fixed;
   top: 0;
@@ -607,7 +546,6 @@ body {
   display: block;
 }
 
-/* menú en pantallas grandes: ocupa hasta 1/4 de la pantalla */
 @media (min-width: 1024px) {
   .menu {
     width: 25vw;
@@ -620,7 +558,6 @@ body {
   }
 }
 
-/* menú en pantallas pequeñas: ocupa todo el ancho */
 @media (max-width: 768px) {
   .menu {
     width: 100%;
@@ -640,20 +577,17 @@ body {
    DETALLE DE PRODUCTO (product.html)
    =========================== */
 
-/* contenedor general (imagen + texto) */
 .product-detail-layout {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
 
-/* wrapper para poder centrar la imagen */
 .product-detail-image-wrapper {
   display: flex;
   justify-content: center;
 }
 
-/* imagen del producto en detalle */
 .product-detail-image {
   margin: 0 auto;
   width: 100%;
@@ -668,12 +602,10 @@ body {
   cursor: pointer;
 }
 
-/* bloque de texto (nombre, descripción, precio) */
 .product-detail-info {
   width: 100%;
 }
 
-/* En pantallas grandes: dos columnas */
 @media (min-width: 1024px) {
   .product-detail-layout {
     flex-direction: row;
@@ -691,7 +623,6 @@ body {
   }
 }
 
-/* En pantallas muy grandes (4K) no dejar que se dispare demasiado */
 @media (min-width: 1440px) {
   .product-detail-image {
     max-width: 520px;
@@ -699,48 +630,68 @@ body {
   }
 }
 
-/* modal 
-#image-modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}*/
+/* ===========================
+   MAPA / DROPDOWNS (otras páginas)
+   =========================== */
 
-#modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
+.dropdown-container {
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
+  max-width: 300px;
 }
 
-#image-modal .relative {
-  max-width: 90%;
-  max-height: 90%;
-  overflow: auto;
+.dropdown-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
-#image-modal img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-#close-modal {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 24px;
+.dropdown {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%23000' d='M0 0h10v10H0z'/><path fill='%23fff' d='M5 1.5L2.5 4.5 5 7.5 7.5 4.5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 10px;
   cursor: pointer;
+}
+
+.dropdown:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.dropdown option {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.dropdown option:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown[disabled] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
 }
 
 .container {
   padding: 20px;
 }
 
-#department-select, #store-select {
+#department-select,
+#store-select {
   margin: 10px 0;
 }
 

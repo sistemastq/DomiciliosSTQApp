@@ -41,16 +41,14 @@
       rel="stylesheet"
     />
 
-    <style>
-      .material-symbols-outlined {
-        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-      }
-    </style>
-
     <!-- CSS propio -->
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body class="bg-background-light dark:bg-background-dark font-display">
+
+  <body
+    id="home-page"
+    class="bg-background-light dark:bg-background-dark font-display"
+  >
     <!-- PANTALLA DE CARGA GLOBAL -->
     <div
       id="page-loader"
@@ -70,21 +68,22 @@
       </div>
     </div>
 
-    <div class="app-root">
+    <div class="app-root" id="app-root">
       <!-- Banner superior -->
-      <div class="bg-[#FFC700] p-2 text-center">
+      <div id="top-banner" class="bg-[#FFC700] p-2 text-center">
         <h3 class="text-black tracking-light text-sm font-bold leading-tight">
           Envío gratis en pedidos superiores a $100.000 cop
         </h3>
       </div>
 
-      <!-- Header -->
+      <!-- Header PRINCIPAL -->
       <header
+        id="main-header"
         class="sticky top-0 z-20 bg-background-light dark:bg-background-dark/90 px-4 py-2 backdrop-blur-sm shadow-sm shadow-black/10"
       >
         <div class="grid grid-cols-[auto,1fr,auto] items-center w-full">
-          <!-- IZQUIERDA: USUARIO + NOMBRE -->
-          <div class="flex items-center gap-2">
+          <!-- HEADER: IZQUIERDA (USUARIO + NOMBRE) -->
+          <div id="header-left" class="flex items-center gap-2">
             <button class="icon-button" id="user-icon">
               <span class="material-symbols-outlined text-2xl">person</span>
             </button>
@@ -94,8 +93,8 @@
             ></span>
           </div>
 
-          <!-- CENTRO: LOGO -->
-          <div class="flex items-center justify-center">
+          <!-- HEADER: CENTRO (LOGO) -->
+          <div id="header-center" class="flex items-center justify-center">
             <img
               src="/img/logo.png"
               alt="Domicilios Tierra Querida"
@@ -103,8 +102,11 @@
             />
           </div>
 
-          <!-- DERECHA: MENÚ + CARRITO -->
-          <div class="flex items-center justify-end gap-2">
+          <!-- HEADER: DERECHA (MENÚ + CARRITO) -->
+          <div
+            id="header-right"
+            class="flex items-center justify-end gap-2"
+          >
             <button class="icon-button" id="menu-icon">
               <span class="material-symbols-outlined text-2xl">menu</span>
             </button>
@@ -125,17 +127,21 @@
 
       <!-- Menú lateral -->
       <nav class="menu" id="menu">
-        <ul>
-          <li><a href="/stores">Puntos de venta</a></li>
-          <li><a href="/history">Histórico de pedidos</a></li>
+        <ul id="menu-list">
+          <li class="menu-item">
+            <a href="/stores">Puntos de venta</a>
+          </li>
+          <li class="menu-item">
+            <a href="/history">Histórico de pedidos</a>
+          </li>
 
           <!-- aparece solo si NO está logueado -->
-          <li id="menu-login-item">
+          <li class="menu-item" id="menu-login-item">
             <a href="/login">Iniciar sesión</a>
           </li>
 
           <!-- aparece solo si SÍ está logueado -->
-          <li id="menu-logout-item" class="hidden">
+          <li class="menu-item hidden" id="menu-logout-item">
             <button type="button" id="logout-button" class="w-full text-left">
               Cerrar sesión
             </button>
@@ -150,7 +156,7 @@
       <div class="overlay" id="overlay"></div>
 
       <!-- HERO CAROUSEL con imagen + texto -->
-      <section class="hero-section mt-3">
+      <section class="hero-section mt-3" id="hero-section">
         <div id="hero-carousel" class="hero-carousel"></div>
 
         <!-- Flechas navegación -->
@@ -174,32 +180,53 @@
       </section>
 
       <!-- Tabs / Filtros (categorías por tipo, SIN adiciones) -->
-      <nav class="category-nav">
+      <nav class="category-nav" id="category-nav">
         <div
           id="category-tabs"
-          class="flex border-b border-gray-200 dark:border-white/20 justify-between overflow-x-auto"
+          class="flex border-b border-gray-200 dark:border-white/20 overflow-x-auto flex-nowrap gap-3 px-4 no-scrollbar"
         >
-          <button class="tab-btn tab-btn--active" data-tipo="1">
+          <button
+            id="tab-hamburguesas"
+            class="tab-btn tab-btn--active flex-shrink-0"
+            data-tipo="1"
+          >
             <p class="tab-label">Hamburguesas</p>
           </button>
-          <button class="tab-btn" data-tipo="3">
+          <button
+            id="tab-combos"
+            class="tab-btn flex-shrink-0"
+            data-tipo="3"
+          >
             <p class="tab-label">Combos</p>
           </button>
-          <button class="tab-btn" data-tipo="4">
+          <button
+            id="tab-papas"
+            class="tab-btn flex-shrink-0"
+            data-tipo="4"
+          >
             <p class="tab-label">Papas</p>
           </button>
-          <button class="tab-btn" data-tipo="6">
+          <button
+            id="tab-bebidas"
+            class="tab-btn flex-shrink-0"
+            data-tipo="6"
+          >
             <p class="tab-label">Bebidas</p>
           </button>
         </div>
       </nav>
 
-      <!-- Productos (carrusel optimizado) -->
-      <section class="products-section py-6">
+      <!-- Productos (carrusel horizontal) -->
+      <section class="products-section py-6" id="products-section">
         <div class="max-w-6xl mx-auto px-4">
           <!-- Encabezado + flechas -->
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl sm:text-2xl font-extrabold text-black dark:text-white">
+          <div
+            id="products-header"
+            class="flex items-center justify-between mb-4"
+          >
+            <h2
+              class="text-xl sm:text-2xl font-extrabold text-black dark:text-white"
+            >
               Nuestro menú
             </h2>
             <div class="flex gap-2">
@@ -209,26 +236,30 @@
                 disabled
                 aria-label="Productos anteriores"
               >
-                <span class="material-symbols-outlined text-base">chevron_left</span>
+                <span class="material-symbols-outlined text-base"
+                  >chevron_left</span
+                >
               </button>
               <button
                 id="products-next"
                 class="flex items-center justify-center h-9 w-9 rounded-full border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-[#181818] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-[#262626] transition"
                 aria-label="Más productos"
               >
-                <span class="material-symbols-outlined text-base">chevron_right</span>
+                <span class="material-symbols-outlined text-base"
+                  >chevron_right</span
+                >
               </button>
             </div>
           </div>
 
           <!-- Carrusel de productos -->
-          <div class="relative">
-            <div id="products-viewport" class="overflow-hidden">
+          <div class="relative" id="products-carousel-wrapper">
+            <div
+              id="products-viewport"
+              class="overflow-x-auto overflow-y-visible no-scrollbar"
+            >
               <!-- Aquí solo se van a renderizar máx 5 tarjetas (4 completas + 1 asomada) -->
-              <div
-                id="products-container"
-                class="flex gap-4 py-1"
-              ></div>
+              <div id="products-container" class="flex gap-4 py-1"></div>
             </div>
 
             <!-- Difuminado del lado derecho cuando hay más productos -->
@@ -241,13 +272,16 @@
       </section>
 
       <!-- ABOUT / QUIÉNES SOMOS -->
-      <section class="bg-background-light dark:bg-[#020617] py-12 sm:py-16">
+      <section
+        class="bg-background-light dark:bg-[#020617] py-12 sm:py-16"
+        id="about-section"
+      >
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
             class="grid gap-10 lg:gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] items-center"
           >
             <!-- IMAGEN / EQUIPO -->
-            <div class="relative">
+            <div class="relative" id="about-image-wrapper">
               <div
                 class="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-primary/80 via-red-900/60 to-black/80 opacity-70 blur-xl"
                 aria-hidden="true"
@@ -274,7 +308,7 @@
             </div>
 
             <!-- TEXTO -->
-            <div class="space-y-5 sm:space-y-6">
+            <div class="space-y-5 sm:space-y-6" id="about-text-block">
               <p
                 class="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.28em] text-primary"
               >
@@ -318,6 +352,7 @@
                 class="flex flex-col sm:flex-row sm:items-center gap-4 pt-2 sm:pt-3"
               >
                 <a
+                  id="about-cta-stores"
                   href="/stores"
                   class="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-primary text-white text-sm font-bold tracking-[0.04em] shadow-lg shadow-primary/40 hover:shadow-primary/60 hover:brightness-110 transition"
                 >
@@ -332,6 +367,7 @@
                 >
                   <span class="hidden sm:inline">Síguenos</span>
                   <a
+                    id="social-facebook"
                     href="https://www.facebook.com"
                     target="_blank"
                     class="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white hover:bg-primary transition"
@@ -342,6 +378,7 @@
                     </span>
                   </a>
                   <a
+                    id="social-instagram"
                     href="https://www.instagram.com"
                     target="_blank"
                     class="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white hover:bg-primary transition"
@@ -359,7 +396,10 @@
       </section>
 
       <!-- INSTAGRAM / STORIES -->
-      <section class="py-10 bg-background-light dark:bg-background-dark">
+      <section
+        class="py-10 bg-background-light dark:bg-background-dark"
+        id="instagram-section"
+      >
         <div class="max-w-6xl mx-auto px-4">
           <h2
             class="text-center text-2xl md:text-3xl font-extrabold tracking-tight text-black dark:text-white mb-6"
@@ -371,6 +411,7 @@
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <!-- Card 1 -->
             <a
+              id="instagram-card-1"
               href="https://www.instagram.com/tierraquerida20/"
               target="_blank"
               rel="noopener noreferrer"
@@ -398,6 +439,7 @@
 
             <!-- Card 2 -->
             <a
+              id="instagram-card-2"
               href="https://www.instagram.com/tierraquerida20/"
               target="_blank"
               rel="noopener noreferrer"
@@ -425,6 +467,7 @@
 
             <!-- Card 3 -->
             <a
+              id="instagram-card-3"
               href="https://www.instagram.com/tierraquerida20/"
               target="_blank"
               rel="noopener noreferrer"
@@ -452,6 +495,7 @@
 
             <!-- Card 4 -->
             <a
+              id="instagram-card-4"
               href="https://www.instagram.com/tierraquerida20/"
               target="_blank"
               rel="noopener noreferrer"
@@ -481,7 +525,7 @@
       </section>
 
       <!-- Footer -->
-      <footer class="bg-black/90 text-white mt-10">
+      <footer class="bg-black/90 text-white mt-10" id="main-footer">
         <div class="container mx-auto px-4 py-8">
           <div class="text-center text-sm text-white/70 flex flex-col gap-2">
             <p class="text-xs text-white/50 mt-4">
@@ -722,7 +766,7 @@
       })();
     </script>
 
-    <!-- JS del front -->
+    <!-- JS del front (el index.js que ya tienes) -->
     <script type="module" src="/index.js"></script>
   </body>
 </html>
